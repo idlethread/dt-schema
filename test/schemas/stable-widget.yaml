@@ -1,0 +1,26 @@
+# SPDX-License-Identifier: BSD-2-Clause
+%YAML 1.2
+---
+$id: http://devicetree.org/schemas/stable-widget.yaml#
+$schema: http://devicetree.org/meta-schemas/core.yaml#
+
+title: Test device for contrast with experimental-widget.yaml
+
+maintainers:
+  - Rob Herring <robh@kernel.org>
+
+properties:
+  compatible:
+    const: vendor,stable-widget
+
+  reg:
+    maxItems: 1
+
+required:
+  - compatible
+  - reg
+
+# Same shape as experimental-widget.yaml, except this locks down the
+# property set the normal way. Used to show that the *same* undocumented
+# property is accepted for the experimental binding and rejected here.
+additionalProperties: false

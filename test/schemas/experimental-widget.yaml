@@ -1,0 +1,27 @@
+# SPDX-License-Identifier: BSD-2-Clause
+%YAML 1.2
+---
+$id: http://devicetree.org/schemas/experimental-widget.yaml#
+$schema: http://devicetree.org/meta-schemas/experimental.yaml#
+
+title: Test device for the experimental meta-schema
+
+maintainers:
+  - Rob Herring <robh@kernel.org>
+
+maturity: experimental
+
+properties:
+  compatible:
+    const: vendor,experimental-widget
+
+  reg:
+    maxItems: 1
+
+required:
+  - compatible
+  - reg
+
+# Deliberately no additionalProperties/unevaluatedProperties: that is
+# the entire point of the experimental meta-schema. Compare with
+# stable-widget.yaml, which is otherwise identical.

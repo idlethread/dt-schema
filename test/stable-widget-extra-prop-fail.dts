@@ -1,0 +1,16 @@
+// SPDX-License-Identifier: BSD-2-Clause
+/dts-v1/;
+/plugin/; // silence any missing phandle references
+/ {
+	model = "none";
+	compatible = "foo";
+
+	#address-cells = <1>;
+	#size-cells = <1>;
+
+	widget@0 {
+		compatible = "vendor,stable-widget";
+		reg = <0x0 0x4>;
+		vendor,totally-undocumented-property;
+	};
+};

@@ -1,0 +1,90 @@
+# SPDX-License-Identifier: BSD-2-Clause
+%YAML 1.2
+---
+$id: http://devicetree.org/meta-schemas/experimental.yaml#
+$schema: https://json-schema.org/draft/2019-09/schema
+description: >
+  Metaschema for devicetree bindings marked 'maturity: experimental' (see
+  Documentation/devicetree/bindings/writing-schema.rst in the kernel
+  tree). A relaxed sibling of core.yaml/base.yaml:
+
+   - additionalProperties/unevaluatedProperties is optional rather than
+     required, so a binding whose property surface isn't settled yet can
+     leave it unset. dtschema's own check_schema_refs() already treats a
+     top-level schema with neither key set as "common" (its existing term
+     for "intentionally leaves properties open") and skips the usual
+     advisory nag about it, so this is a use of an existing mechanism,
+     not a new one -- see _schema_allows_no_undefined_props() in
+     schema.py.
+   - maturity is required and format-checked, so a binding can't set
+     '$schema: experimental.yaml#' without also carrying it, and has no
+     other property alongside it. See scripts/dtc/dt-maturity-check in
+     the kernel tree for how expiry and tracking are derived from git
+     history instead of written fields.
+
+  Deliberately not built by '$ref'-ing base.yaml: base.yaml's own
+  'properties.$schema.enum' is {core.yaml#, base.yaml#}, so pulling it in
+  here would reject the very '$schema: experimental.yaml#' value this
+  file exists to allow. The property list below is base.yaml's, plus
+  'maturity' and this file's own $id in the propertyNames and required
+  lists.
+
+allOf:
+  - $ref: http://devicetree.org/meta-schemas/keywords.yaml#
+
+properties:
+  $id:
+    pattern: 'http://devicetree.org/schemas(/[^/ ]+)+\.yaml#'
+  $schema:
+    const: http://devicetree.org/meta-schemas/experimental.yaml#
+  title:
+    maxLength: 100
+    description:
+      Everything is a binding/schema, no need to say it. Describe what
+      hardware the binding is for.
+    not:
+      pattern: '([Bb]inding| [Ss]chema)'
+
+  examples:
+    type: array
+    items:
+      type: string
+
+  maintainers:
+    type: array
+    items:
+      pattern: '^(.+ <[\S]+@[\S]+>|[\S]+@[\S]+)$'
+      type: string
+      format: email
+
+  maturity:
+    const: experimental
+
+  # Reuse core.yaml's per-property validation (reg/clocks/interrupts/...
+  # shape checking) by pointing at its shared definitions directly,
+  # rather than duplicating them here or pulling in the rest of
+  # core.yaml's top-level constraints.
+  patternProperties:
+    $ref: http://devicetree.org/meta-schemas/core.yaml#/definitions/all-properties
+  properties:
+    $ref: http://devicetree.org/meta-schemas/core.yaml#/definitions/all-properties
+
+propertyNames:
+  enum: [ $id, $schema, title, description, examples, required, allOf, anyOf, oneOf,
+          definitions, $defs, additionalProperties, dependencies, dependentRequired,
+          dependentSchemas, patternProperties, properties, not, if, then, else,
+          unevaluatedProperties, deprecated, maintainers, select, $ref,
+          maturity ]
+
+required:
+  - $id
+  - $schema
+  - title
+  - maintainers
+  - maturity
+
+anyOf:
+  - required:
+      - properties
+  - required:
+      - patternProperties
